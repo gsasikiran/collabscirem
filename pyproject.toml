@@ -1,0 +1,28 @@
+[project]
+name = "collabscirem"
+version = "1.0.0"
+description = "CollabSciReM: science-aware reward decomposition for multi-turn scientific conversations"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "accelerate", "bitsandbytes", "datasets", "deepspeed", "huggingface-hub", "litellm",
+    "nltk", "numpy", "openai", "pandas", "peft", "pyarrow", "python-dotenv", "rich", "scipy",
+    "tabulate", "tenacity", "tiktoken", "tokenizers", "torch", "tqdm", "trl>0.18",
+    "transformers", "vllm>=0.9", "wandb",
+]
+
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"collabscirem" = ["prompts/*.txt", "benchmarks/prompts/*.txt"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["collabscirem*"]

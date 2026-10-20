@@ -1,0 +1,239 @@
+diff --git a/mint/agents/__init__.py b/mint/agents/__init__.py
+index c1d5651..ff3cb88 100644
+--- a/mint/agents/__init__.py
++++ b/mint/agents/__init__.py
+@@ -1,6 +1,9 @@
+ from .base import LMAgent
+ from .openai_lm_agent import OpenAILMAgent
+-from .bard_agent import BardLMAgent
++try:  # optional: requires google-generativeai
++    from .bard_agent import BardLMAgent
++except ImportError:
++    BardLMAgent = None
+ from .openai_feedback_agent import OpenAIFeedbackAgent
+ from .claude_feedback_agent import ClaudeFeedbackAgent
+ from .vllm_feedback_agent import VLLMFeedbackAgent
+diff --git a/mint/agents/openai_feedback_agent.py b/mint/agents/openai_feedback_agent.py
+index 5695071..e4322fc 100644
+--- a/mint/agents/openai_feedback_agent.py
++++ b/mint/agents/openai_feedback_agent.py
+@@ -82,7 +82,8 @@ class OpenAIFeedbackAgent(OpenAILMAgent):
+             )
+             lm_output, token_usage = self.call_lm(messages)
+             for usage_type, count in token_usage.items():
+-                state.token_counter["feedback_" + usage_type] += count
++                if isinstance(count, int):  # newer APIs add None / nested *_details fields
++                    state.token_counter["feedback_" + usage_type] += count
+             action = self.lm_output_to_action(lm_output, form)
+             # log in red
+             LOGGER.debug(
+diff --git a/mint/agents/openai_lm_agent.py b/mint/agents/openai_lm_agent.py
+index 2c4767a..f18095b 100644
+--- a/mint/agents/openai_lm_agent.py
++++ b/mint/agents/openai_lm_agent.py
+@@ -40,7 +40,8 @@ class OpenAILMAgent(LMAgent):
+         try:
+             lm_output, token_usage = self.call_lm(messages)
+             for usage_type, count in token_usage.items():
+-                state.token_counter[usage_type] += count
++                if isinstance(count, int):  # newer servers add None / nested *_details fields
++                    state.token_counter[usage_type] += count
+             action = self.lm_output_to_action(lm_output)
+             return action
+         except openai.error.InvalidRequestError:  # mostly due to model context window limit
+diff --git a/mint/agents/vllm_agent.py b/mint/agents/vllm_agent.py
+index 5f4e347..0cca7fe 100644
+--- a/mint/agents/vllm_agent.py
++++ b/mint/agents/vllm_agent.py
+@@ -1,4 +1,5 @@
+ from .openai_lm_agent import OpenAILMAgent
++import os
+ import openai
+ import openai.error
+ import logging
+@@ -19,7 +20,7 @@ class VLLMAgent(OpenAILMAgent):
+             "openai.api_base" in config.keys()
+         ), "missing openai.api_base to connect to server"
+         self.api_base = config["openai.api_base"]
+-        self.api_key = "EMPTY"
++        self.api_key = os.getenv("VLLM_API_KEY", "EMPTY")
+         LOGGER.info("remember to openup the server using docs/SERVING.mdh")
+         self.stop_words = [
+             "\nObservation:",
+@@ -49,16 +50,31 @@ class VLLMAgent(OpenAILMAgent):
+             openai.error.ServiceUnavailableError,
+             openai.error.APIConnectionError,
+         ),
++        # A crashed vLLM server never comes back; give up so the run exits and
++        # run_mint_all.sh restarts the server (unbounded fibo waits reached hours).
++        max_time=900,
+     )
+     def call_lm(self, messages):
+         if self.config.get("add_system_message", False):
+             messages = self.add_system_message(messages)
+             assert messages[0]["role"] == "system"
+             # system msg will be formatted by vllm and fastchat, so no need to format here
++            # Optional extra instructions, e.g. the proactive-prompting baseline
++            extra_system_prompt = self.config.get("extra_system_prompt")
++            if extra_system_prompt:
++                messages[0]["content"] = extra_system_prompt + "\n\n" + messages[0]["content"]
+         else:
+             # simply ignore chat messages as it may cause issue for some served models
+             pass
+ 
++        # MINT_SEED makes a repeat run reproducible while still differing from the
++        # other seeds, so mean and std across seeds reflect controlled variation.
++        sampling = {}
++        if "top_p" in self.config:
++            sampling["top_p"] = self.config["top_p"]
++        if os.getenv("MINT_SEED"):
++            sampling["seed"] = int(os.environ["MINT_SEED"])
++
+         try:
+             if self.config["chat_mode"]:
+                 response = openai.ChatCompletion.create(
+@@ -69,6 +85,7 @@ class VLLMAgent(OpenAILMAgent):
+                     stop=self.stop_words,
+                     api_base=self.api_base,
+                     api_key=self.api_key,
++                    **sampling,
+                 )
+                 resp_str = response.choices[0].message["content"]
+ 
+diff --git a/mint/envs/__init__.py b/mint/envs/__init__.py
+index 04eee8b..af38727 100644
+--- a/mint/envs/__init__.py
++++ b/mint/envs/__init__.py
+@@ -1,3 +1,7 @@
+ from .base import BaseEnv
+ from .general_env import GeneralEnv
+-from .alfworld_env import AlfworldEnv
++try:  # optional: requires the alfworld environment
++    from .alfworld_env import AlfworldEnv
++except ImportError:
++    class AlfworldEnv:  # placeholder so isinstance() checks stay valid
++        pass
+diff --git a/mint/envs/general_env.py b/mint/envs/general_env.py
+index 18152fd..950d396 100644
+--- a/mint/envs/general_env.py
++++ b/mint/envs/general_env.py
+@@ -22,6 +22,16 @@ INVALID_INPUT_MESSAGE = (
+     "For example: The answer to the question is <solution> 42 </solution>. \n"
+ )
+ 
++# no-tool ablation: observations for turns that do not propose a solution
++NO_TOOL_EXECUTE_MESSAGE = (
++    "Code execution is not available in this setting. Reason step by step in text, "
++    "and propose your answer with <solution> YOUR_SOLUTION_HERE </solution>."
++)
++NO_TOOL_REASONING_MESSAGE = (
++    "No solution was proposed in this turn. When you are ready, "
++    "propose your answer with <solution> YOUR_SOLUTION_HERE </solution>."
++)
++
+ 
+ class GeneralEnv(BaseEnv):
+     def __init__(
+@@ -36,6 +46,9 @@ class GeneralEnv(BaseEnv):
+ 
+         self.state = State()
+         self.config = environment_config
++        if not self.config["use_tools"]:
++            # no-tool ablation: hide tool descriptions and never execute code
++            self.tool_set = []
+ 
+         # Feedback
+         self.feedback_config = feedback_config
+@@ -134,6 +147,14 @@ class GeneralEnv(BaseEnv):
+ 
+     def handle_tool_call(self, action: Action) -> str:
+         """Use tool to obtain "observation."""
++        if not self.config["use_tools"]:
++            # Each non-solution turn still costs one of max_steps, so the turn
++            # budget matches the tool setting; execute attempts are counted apart.
++            if "<execute>" in action.value:
++                self.state.agent_action_count["execute_attempt"] += 1
++                return NO_TOOL_EXECUTE_MESSAGE
++            self.state.agent_action_count["reasoning_turn"] += 1
++            return NO_TOOL_REASONING_MESSAGE
+         try:
+             parsed = self.parse_action(action)
+             env_input = parsed["env_input"]
+@@ -295,6 +316,8 @@ class GeneralEnv(BaseEnv):
+             "use_tool": 0,
+             "invalid_action": 0,
+         }
++        if not use_tool:
++            self.state.agent_action_count.update(reasoning_turn=0, execute_attempt=0)
+ 
+         if use_tool:
+             # reset tool set
+diff --git a/mint/tasks/__init__.py b/mint/tasks/__init__.py
+index 7942fa1..dcfffb9 100644
+--- a/mint/tasks/__init__.py
++++ b/mint/tasks/__init__.py
+@@ -1,4 +1,8 @@
+ from .base import Task
+ from .reasoning import ReasoningTask, MultipleChoiceTask, TheoremqaTask
+ from .codegen import CodeGenTask, HumanEvalTask, MBPPTask
+-from .alfworld import AlfWorldTask
++try:  # optional: requires the alfworld environment
++    from .alfworld import AlfWorldTask
++except ImportError:
++    class AlfWorldTask:  # placeholder so isinstance() checks stay valid
++        pass
+diff --git a/mint/tasks/base.py b/mint/tasks/base.py
+index 2e8406f..3fad998 100644
+--- a/mint/tasks/base.py
++++ b/mint/tasks/base.py
+@@ -32,6 +32,10 @@ class Task(ABC):
+             ),
+             "with_tool": load_file(os.path.join(task_dir, "with_tool.txt")),
+         }
++        # no-tool ablation: only some tasks ship a tool-free example
++        no_tool_path = os.path.join(task_dir, "without_tool_and_feedback.txt")
++        if os.path.exists(no_tool_path):
++            self._in_context_example["without_tool_and_feedback"] = load_file(no_tool_path)
+         self.metadata = {}
+ 
+     @property
+@@ -48,6 +52,9 @@ class Task(ABC):
+             return self._in_context_example["with_tool_and_feedback"]
+         elif use_tool and not with_feedback:
+             return self._in_context_example["with_tool"]
++        elif not use_tool and "without_tool_and_feedback" in self._in_context_example:
++            # also used when feedback is off: the example's feedback lines are harmless
++            return self._in_context_example["without_tool_and_feedback"]
+         else:
+             raise NotImplementedError
+ 
+diff --git a/mint/tasks/in_context_examples/reasoning/without_tool_and_feedback.txt b/mint/tasks/in_context_examples/reasoning/without_tool_and_feedback.txt
+new file mode 100644
+index 0000000..30c8c91
+--- /dev/null
++++ b/mint/tasks/in_context_examples/reasoning/without_tool_and_feedback.txt
+@@ -0,0 +1,24 @@
++Task:
++Evaluate $\int\int_C (x+y)^2 dx,dy$, where C is the circle defined by $x^2 + y^2 = M$, and M = 701.
++Output format requirement: Round to three decimal places, using half up rounding rule.
++
++Assistant:
++<thought>
++To evaluate the double integral of $(x+y)^2$ over the region $C$, where $C$ is the disk $x^2 + y^2 \le 701$, we should use polar coordinates.
++In polar coordinates, $x = r\cos(\theta)$ and $y = r\sin(\theta)$, and the differential area element $dx,dy$ becomes $r,dr,d\theta$.
++$\int\int_C (x+y)^2 dx,dy = \int_0^{2\pi}\int_0^{\sqrt{701}} (r\cos(\theta) + r\sin(\theta))^2 r,dr,d\theta$
++Expanding, $(\cos\theta + \sin\theta)^2 = 1 + 2\sin\theta\cos\theta$, and the cross term integrates to zero over $[0, 2\pi]$.
++</thought>
++
++Observation:
++No solution was proposed in this turn. When you are ready, propose your answer with <solution> YOUR_SOLUTION_HERE </solution>.
++
++Expert feedback:
++This is GOOD. You have set up the integral correctly in polar coordinates and simplified the angular part. Next you should evaluate the remaining integral and meet the output format requirement.
++
++Assistant:
++<thought>
++The integral becomes $\int_0^{2\pi} d\theta \int_0^{\sqrt{701}} r^3 dr = 2\pi \cdot \frac{701^2}{4} = \frac{\pi \cdot 491401}{2} = 245700.5\pi$.
++With $\pi \approx 3.14159265$, $245700.5\pi \approx 771890.886$.
++</thought>
++The answer is <solution> 771890.886 </solution>.

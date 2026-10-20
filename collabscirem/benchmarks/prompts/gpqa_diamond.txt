@@ -1,0 +1,18 @@
+Answer the following graduate-level multiple-choice question in science. You must reason carefully step by step, showing all relevant calculations, logic, or deductions. Do not skip steps, even if they seem straightforward.
+
+Important instructions:
+
+Restate the question briefly to ensure full understanding.
+
+Analyze all options systematically: consider underlying principles and eliminate clearly incorrect ones first.
+
+Break down complex reasoning into smaller, verifiable steps.
+
+Show all calculations, derivations, or logical deductions explicitly, including units if applicable.
+
+Double-check each calculation and reasoning step before moving on.
+
+After reaching a conclusion, re-examine the eliminated options to confirm no mistakes were made.
+
+Place your final answer only on the LAST line, in the exact format:
+{Answer: $LETTER}

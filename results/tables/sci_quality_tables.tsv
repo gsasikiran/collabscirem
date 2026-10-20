@@ -1,0 +1,75 @@
+## Scientific quality — main (CollabSciReM win rate vs this model; >50% = CollabSciReM judged better; DeepSeek judge, 300 held-out prompts)
+	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+Model	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+Llama-3.2-3B-Instruct	943	54.5% [50.5%, 58.5%]	51.3% [47.5%, 55.2%]	53.3% [49.7%, 57.0%]	54.0% [50.2%, 58.0%]	51.7% [48.0%, 55.3%]	48.7% [44.5%, 52.8%]	53.7% [49.5%, 57.7%]	53.3% [49.7%, 56.9%]	29.9% [18.8%, 41.7%] (extrapolated)
+  CollabLLMSci	555	56.0% [51.7%, 60.2%]	54.2% [50.3%, 58.0%]	53.3% [49.7%, 57.0%]	55.7% [51.5%, 59.8%]	53.2% [49.7%, 56.8%]	56.2% [52.2%, 60.2%]	56.5% [52.2%, 60.7%]	54.8% [51.3%, 58.3%]	58.2% [54.6%, 61.9%]
+  CollabSciReM	584	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Llama-3.1-8B-Instruct	963	45.7% [42.0%, 49.5%]	43.8% [40.0%, 47.8%]	45.0% [41.5%, 48.7%]	47.0% [43.3%, 50.8%]	46.0% [42.3%, 49.7%]	42.3% [38.5%, 46.2%]	45.5% [41.8%, 49.3%]	45.4% [42.0%, 48.8%]	16.0% [-0.5%, 33.8%] (extrapolated)
+  CollabLLMSci	474	65.0% [61.0%, 68.8%]	61.8% [57.8%, 65.7%]	65.5% [61.7%, 69.2%]	64.7% [60.7%, 68.8%]	62.8% [59.0%, 66.7%]	64.8% [60.8%, 68.8%]	65.3% [61.2%, 69.3%]	64.2% [60.5%, 68.0%]	64.2% [60.7%, 68.1%]
+  CollabSciReM	474	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Qwen-2.5-3B-Instruct	1199	34.2% [30.8%, 37.3%]	33.2% [30.0%, 36.3%]	31.5% [28.2%, 34.8%]	38.3% [35.0%, 41.8%]	33.3% [30.5%, 36.2%]	26.0% [23.0%, 29.0%]	34.5% [31.3%, 37.8%]	34.3% [31.2%, 37.3%]	24.1% [-1.7%, 49.3%] (extrapolated)
+  CollabLLMSci	351	52.2% [48.0%, 56.3%]	51.8% [48.3%, 55.3%]	51.0% [47.3%, 54.7%]	53.3% [49.2%, 57.5%]	52.5% [49.3%, 55.7%]	54.5% [50.0%, 58.8%]	52.7% [48.3%, 56.8%]	52.1% [48.6%, 55.6%]	49.2% [44.3%, 54.4%]
+  CollabSciReM	388	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Qwen-2.5-7B-Instruct	1306	32.7% [29.3%, 36.2%]	31.3% [27.8%, 34.8%]	35.7% [32.3%, 39.0%]	37.5% [33.8%, 41.0%]	32.3% [29.2%, 35.5%]	26.8% [23.5%, 30.0%]	33.5% [30.2%, 37.0%]	34.3% [31.2%, 37.5%]	11.8% [-7.4%, 31.4%] (extrapolated)
+  CollabLLMSci	499	63.8% [59.8%, 67.7%]	61.5% [57.7%, 65.3%]	61.7% [58.0%, 65.3%]	60.5% [56.3%, 64.7%]	63.5% [59.8%, 67.0%]	64.3% [60.3%, 68.3%]	61.8% [57.7%, 65.8%]	61.9% [58.4%, 65.5%]	62.5% [57.9%, 67.2%]
+  CollabSciReM	542	reference	reference	reference	reference	reference	reference	reference	reference	reference
+
+## Scientific quality — ablation / sensitivity, Llama-3.1-8B (CollabSciReM win rate vs this model; >50% = CollabSciReM judged better; DeepSeek judge, 300 held-out prompts)
+	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+Model	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+R_gen + R_struct	484	60.3% [56.2%, 64.5%]	60.7% [56.8%, 64.7%]	57.3% [53.7%, 60.8%]	60.3% [56.3%, 64.5%]	58.3% [54.3%, 62.5%]	61.0% [57.0%, 64.8%]	60.8% [56.7%, 65.0%]	59.7% [56.2%, 63.2%]	58.9% [55.2%, 62.6%]
+R_gen + R_sci	1512	36.7% [33.0%, 40.3%]	30.5% [27.0%, 34.2%]	38.0% [34.3%, 41.5%]	44.2% [40.3%, 48.0%]	28.0% [24.8%, 31.2%]	21.7% [18.7%, 24.7%]	36.7% [33.0%, 40.3%]	37.3% [34.1%, 40.5%]	-8.1% [-37.9%, 22.1%] (extrapolated)
+R_struct + R_sci	511	65.0% [60.8%, 69.2%]	64.2% [60.2%, 68.0%]	61.0% [57.0%, 65.0%]	63.8% [59.8%, 67.8%]	62.0% [58.0%, 65.8%]	62.0% [57.8%, 66.0%]	64.7% [60.3%, 68.8%]	63.5% [59.8%, 67.2%]	62.8% [57.9%, 67.9%]
+CollabSciReM, sensitivity	486	49.5% [45.3%, 53.7%]	49.2% [45.2%, 53.3%]	49.3% [45.3%, 53.5%]	49.2% [45.0%, 53.3%]	49.3% [45.3%, 53.3%]	48.7% [44.5%, 52.8%]	49.3% [45.0%, 53.5%]	49.3% [45.5%, 53.2%]	48.9% [44.6%, 53.3%]
+CollabSciReM	474	reference	reference	reference	reference	reference	reference	reference	reference	reference
+
+## Sci quality model view — main (this model's win rate vs CollabSciReM; >50% = this model judged better; DeepSeek judge, 300 held-out prompts)
+	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+Model	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+Llama-3.2-3B-Instruct	943	45.5% [41.5%, 49.5%]	48.7% [44.8%, 52.5%]	46.7% [43.0%, 50.3%]	46.0% [42.0%, 49.8%]	48.3% [44.7%, 52.0%]	51.3% [47.2%, 55.5%]	46.3% [42.3%, 50.5%]	46.7% [43.1%, 50.3%]	70.1% [58.3%, 81.2%] (extrapolated)
+  CollabLLMSci	555	44.0% [39.8%, 48.3%]	45.8% [42.0%, 49.7%]	46.7% [43.0%, 50.3%]	44.3% [40.2%, 48.5%]	46.8% [43.2%, 50.3%]	43.8% [39.8%, 47.8%]	43.5% [39.3%, 47.8%]	45.2% [41.7%, 48.7%]	41.8% [38.1%, 45.4%]
+  CollabSciReM	584	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Llama-3.1-8B-Instruct	963	54.3% [50.5%, 58.0%]	56.2% [52.2%, 60.0%]	55.0% [51.3%, 58.5%]	53.0% [49.2%, 56.7%]	54.0% [50.3%, 57.7%]	57.7% [53.8%, 61.5%]	54.5% [50.7%, 58.2%]	54.6% [51.2%, 58.0%]	84.0% [66.2%, 100.5%] (extrapolated)
+  CollabLLMSci	474	35.0% [31.2%, 39.0%]	38.2% [34.3%, 42.2%]	34.5% [30.8%, 38.3%]	35.3% [31.2%, 39.3%]	37.2% [33.3%, 41.0%]	35.2% [31.2%, 39.2%]	34.7% [30.7%, 38.8%]	35.8% [32.0%, 39.5%]	35.8% [31.9%, 39.3%]
+  CollabSciReM	474	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Qwen-2.5-3B-Instruct	1199	65.8% [62.7%, 69.2%]	66.8% [63.7%, 70.0%]	68.5% [65.2%, 71.8%]	61.7% [58.2%, 65.0%]	66.7% [63.8%, 69.5%]	74.0% [71.0%, 77.0%]	65.5% [62.2%, 68.7%]	65.7% [62.7%, 68.8%]	75.9% [50.7%, 101.7%] (extrapolated)
+  CollabLLMSci	351	47.8% [43.7%, 52.0%]	48.2% [44.7%, 51.7%]	49.0% [45.3%, 52.7%]	46.7% [42.5%, 50.8%]	47.5% [44.3%, 50.7%]	45.5% [41.2%, 50.0%]	47.3% [43.2%, 51.7%]	47.9% [44.4%, 51.4%]	50.8% [45.6%, 55.7%]
+  CollabSciReM	388	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Qwen-2.5-7B-Instruct	1306	67.3% [63.8%, 70.7%]	68.7% [65.2%, 72.2%]	64.3% [61.0%, 67.7%]	62.5% [59.0%, 66.2%]	67.7% [64.5%, 70.8%]	73.2% [70.0%, 76.5%]	66.5% [63.0%, 69.8%]	65.7% [62.5%, 68.8%]	88.2% [68.6%, 107.4%] (extrapolated)
+  CollabLLMSci	499	36.2% [32.3%, 40.2%]	38.5% [34.7%, 42.3%]	38.3% [34.7%, 42.0%]	39.5% [35.3%, 43.7%]	36.5% [33.0%, 40.2%]	35.7% [31.7%, 39.7%]	38.2% [34.2%, 42.3%]	38.1% [34.5%, 41.6%]	37.5% [32.8%, 42.1%]
+  CollabSciReM	542	reference	reference	reference	reference	reference	reference	reference	reference	reference
+
+## Sci quality model view — ablation / sensitivity, Llama-3.1-8B (this model's win rate vs CollabSciReM; >50% = this model judged better; DeepSeek judge, 300 held-out prompts)
+	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+Model	Tokens/turn	Methodological soundness	Justification	Logical consistency	Factual correctness	Novelty	Responsiveness	Overall	Rigor composite	Rigor, length-controlled
+R_gen + R_struct	484	39.7% [35.5%, 43.8%]	39.3% [35.3%, 43.2%]	42.7% [39.2%, 46.3%]	39.7% [35.5%, 43.7%]	41.7% [37.5%, 45.7%]	39.0% [35.2%, 43.0%]	39.2% [35.0%, 43.3%]	40.3% [36.8%, 43.8%]	41.1% [37.4%, 44.8%]
+R_gen + R_sci	1512	63.3% [59.7%, 67.0%]	69.5% [65.8%, 73.0%]	62.0% [58.5%, 65.7%]	55.8% [52.0%, 59.7%]	72.0% [68.8%, 75.2%]	78.3% [75.3%, 81.3%]	63.3% [59.7%, 67.0%]	62.7% [59.5%, 65.9%]	108.1% [77.9%, 137.9%] (extrapolated)
+R_struct + R_sci	511	35.0% [30.8%, 39.2%]	35.8% [32.0%, 39.8%]	39.0% [35.0%, 43.0%]	36.2% [32.2%, 40.2%]	38.0% [34.2%, 42.0%]	38.0% [34.0%, 42.2%]	35.3% [31.2%, 39.7%]	36.5% [32.8%, 40.2%]	37.2% [32.1%, 42.1%]
+CollabSciReM, sensitivity	486	50.5% [46.3%, 54.7%]	50.8% [46.7%, 54.8%]	50.7% [46.5%, 54.7%]	50.8% [46.7%, 55.0%]	50.7% [46.7%, 54.7%]	51.3% [47.2%, 55.5%]	50.7% [46.5%, 55.0%]	50.7% [46.8%, 54.5%]	51.1% [46.7%, 55.4%]
+CollabSciReM	474	reference	reference	reference	reference	reference	reference	reference	reference	reference
+
+## Sci quality counts — main (number of the 300 prompts won by each side; tie = tie or the judge's verdict changed when the order was swapped; DeepSeek judge, 300 held-out prompts)
+	Tokens/turn	Methodological soundness			Justification			Logical consistency			Factual correctness			Novelty			Responsiveness			Overall		
+Model	Tokens/turn	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins
+Llama-3.2-3B-Instruct	943	89	149	62	78	152	70	75	170	55	87	150	63	69	172	59	78	136	86	88	146	66
+  CollabLLMSci	555	107	122	71	83	159	58	74	172	54	98	138	64	70	179	51	95	147	58	107	125	68
+  CollabSciReM	584	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Llama-3.1-8B-Instruct	963	55	164	81	53	157	90	47	176	77	58	166	76	49	178	73	49	156	95	54	165	81
+  CollabLLMSci	474	132	126	42	115	141	44	129	135	36	133	122	45	116	145	39	135	119	46	137	118	45
+  CollabSciReM	474	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Qwen-2.5-3B-Instruct	1199	18	169	113	14	171	115	15	159	126	27	176	97	5	190	105	5	146	149	19	169	112
+  CollabLLMSci	351	90	133	77	63	185	52	65	176	59	92	136	72	57	201	42	105	117	78	95	126	79
+  CollabSciReM	388	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference
+Qwen-2.5-7B-Instruct	1306	23	150	127	23	142	135	22	170	108	32	161	107	13	168	119	13	135	152	23	155	122
+  CollabLLMSci	499	130	123	47	110	149	41	105	160	35	117	129	54	112	157	31	130	126	44	124	123	53
+  CollabSciReM	542	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference
+
+## Sci quality counts — ablation / sensitivity, Llama-3.1-8B (number of the 300 prompts won by each side; tie = tie or the judge's verdict changed when the order was swapped; DeepSeek judge, 300 held-out prompts)
+	Tokens/turn	Methodological soundness			Justification			Logical consistency			Factual correctness			Novelty			Responsiveness			Overall		
+Model	Tokens/turn	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins	CollabSciReM wins	Ties	This model wins
+R_gen + R_struct	484	117	128	55	113	138	49	87	170	43	113	136	51	106	138	56	114	138	48	120	125	55
+R_gen + R_sci	1512	32	156	112	27	129	144	33	162	105	53	159	88	11	146	143	7	116	177	34	152	114
+R_struct + R_sci	511	140	110	50	127	131	42	113	140	47	132	119	49	117	138	45	123	126	51	137	114	49
+CollabSciReM, sensitivity	486	81	135	84	75	145	80	74	148	78	81	133	86	69	158	73	77	138	85	82	132	86
+CollabSciReM	474	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference	reference
+

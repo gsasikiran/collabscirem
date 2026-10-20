@@ -1,0 +1,52 @@
+## MT-Bench-STEM — main (mean ± sample std over seeds; DeepSeek judge, 20 STEM/math questions x 2 turns, seeds 42-44, score 1-10)
+	Overall	Accuracy	Format	Usefulness	Relevance	Tokens/turn
+Model	Overall	Accuracy	Format	Usefulness	Relevance	Tokens/turn
+Llama-3.2-3B-Instruct	6.40 ± 0.38	6.02 ± 0.46	7.82 ± 0.20	6.25 ± 0.48	8.12 ± 0.29	447 ± 26
+  CollabLLMSci	6.48 ± 0.38	6.06 ± 0.42	7.93 ± 0.24	6.15 ± 0.25	8.24 ± 0.15	344 ± 9
+  CollabSciReM	6.24 ± 0.20	5.83 ± 0.24	7.82 ± 0.09	5.98 ± 0.21	8.26 ± 0.13	358 ± 16
+Llama-3.1-8B-Instruct	6.83 ± 0.04	6.55 ± 0.05	7.92 ± 0.07	6.67 ± 0.08	8.37 ± 0.01	469 ± 8
+  CollabLLMSci	7.02 ± 0.19	6.69 ± 0.22	8.19 ± 0.01	6.88 ± 0.22	8.55 ± 0.02	298 ± 6
+  CollabSciReM	7.15 ± 0.20	6.84 ± 0.25	8.19 ± 0.04	6.94 ± 0.16	8.52 ± 0.08	310 ± 4
+Qwen-2.5-3B-Instruct	7.44 ± 0.06	7.15 ± 0.02	8.54 ± 0.05	7.22 ± 0.09	8.82 ± 0.06	521 ± 23
+  CollabLLMSci	6.95 ± 0.48	6.63 ± 0.55	8.24 ± 0.13	6.56 ± 0.43	8.36 ± 0.09	274 ± 4
+  CollabSciReM	6.85 ± 0.15	6.67 ± 0.22	8.06 ± 0.16	6.61 ± 0.01	8.18 ± 0.04	275 ± 3
+Qwen-2.5-7B-Instruct	7.91 ± 0.09	7.62 ± 0.11	8.70 ± 0.07	7.80 ± 0.04	8.90 ± 0.03	555 ± 10
+  CollabLLMSci	7.67 ± 0.05	7.40 ± 0.14	8.70 ± 0.11	7.48 ± 0.04	8.85 ± 0.09	418 ± 5
+  CollabSciReM	7.85 ± 0.11	7.64 ± 0.15	8.68 ± 0.05	7.63 ± 0.21	8.93 ± 0.16	399 ± 4
+
+## MT-Bench-STEM — ablation / sensitivity, Llama-3.1-8B (mean ± sample std over seeds; DeepSeek judge, 20 STEM/math questions x 2 turns, seeds 42-44, score 1-10)
+	Overall	Accuracy	Format	Usefulness	Relevance	Tokens/turn
+Model	Overall	Accuracy	Format	Usefulness	Relevance	Tokens/turn
+R_gen + R_struct	6.81 ± 0.23	6.48 ± 0.23	8.03 ± 0.09	6.67 ± 0.26	8.38 ± 0.07	319 ± 3
+R_gen + R_sci	6.58 ± 0.26	6.33 ± 0.25	7.74 ± 0.27	6.46 ± 0.43	8.10 ± 0.26	622 ± 15
+R_struct + R_sci	6.92 ± 0.15	6.67 ± 0.10	8.06 ± 0.19	6.67 ± 0.12	8.30 ± 0.17	319 ± 8
+CollabLLMSci, CollabSciReM weights	—	—	—	—	—	—
+CollabSciReM, sensitivity	7.14 ± 0.14	6.84 ± 0.08	8.27 ± 0.09	6.85 ± 0.15	8.52 ± 0.23	308 ± 6
+CollabSciReM	7.15 ± 0.20	6.84 ± 0.25	8.19 ± 0.04	6.94 ± 0.16	8.52 ± 0.08	310 ± 4
+
+## MT-Bench-STEM per seed — main (DeepSeek judge, 20 STEM/math questions x 2 turns, seeds 42-44, score 1-10)
+	Overall			Accuracy			Format			Usefulness			Relevance		
+Model	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44
+Llama-3.2-3B-Instruct	6.72	6.50	5.97	6.40	6.15	5.50	8.03	7.80	7.62	6.60	6.45	5.70	8.38	8.18	7.80
+  CollabLLMSci	6.88	6.12	6.45	6.53	5.72	5.92	8.20	7.72	7.88	6.38	5.88	6.20	8.40	8.10	8.22
+  CollabSciReM	6.47	6.15	6.10	6.10	5.65	5.72	7.92	7.78	7.75	6.20	5.95	5.78	8.28	8.38	8.12
+Llama-3.1-8B-Instruct	6.83	6.80	6.88	6.60	6.50	6.55	8.00	7.90	7.88	6.75	6.60	6.67	8.38	8.35	8.38
+  CollabLLMSci	7.10	7.15	6.80	6.75	6.88	6.45	8.20	8.20	8.18	6.95	7.05	6.62	8.57	8.55	8.53
+  CollabSciReM	7.38	7.08	7.00	7.12	6.67	6.72	8.15	8.20	8.22	6.95	7.10	6.78	8.50	8.60	8.45
+Qwen-2.5-3B-Instruct	7.45	7.50	7.38	7.17	7.15	7.12	8.60	8.50	8.53	7.33	7.15	7.17	8.88	8.82	8.75
+  CollabLLMSci	6.40	7.17	7.28	6.00	6.88	7.03	8.10	8.28	8.35	6.08	6.70	6.90	8.25	8.40	8.43
+  CollabSciReM	6.95	6.92	6.67	6.85	6.75	6.42	8.18	8.12	7.88	6.60	6.62	6.60	8.18	8.22	8.15
+Qwen-2.5-7B-Instruct	7.90	8.00	7.83	7.62	7.72	7.50	8.72	8.62	8.75	7.78	7.78	7.85	8.90	8.93	8.88
+  CollabLLMSci	7.67	7.62	7.72	7.28	7.38	7.55	8.78	8.57	8.75	7.53	7.45	7.45	8.78	8.82	8.95
+  CollabSciReM	7.90	7.72	7.92	7.70	7.47	7.75	8.68	8.62	8.72	7.70	7.40	7.80	8.97	8.75	9.05
+
+## MT-Bench-STEM per seed — ablation / sensitivity, Llama-3.1-8B (DeepSeek judge, 20 STEM/math questions x 2 turns, seeds 42-44, score 1-10)
+	Overall			Accuracy			Format			Usefulness			Relevance		
+Model	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44	seed 42	seed 43	seed 44
+R_gen + R_struct	6.97	6.90	6.55	6.67	6.55	6.22	8.07	8.10	7.92	6.88	6.78	6.38	8.38	8.45	8.30
+R_gen + R_sci	6.88	6.38	6.47	6.62	6.17	6.20	8.05	7.55	7.62	6.92	6.08	6.38	8.38	7.85	8.07
+R_struct + R_sci	6.85	7.10	6.83	6.65	6.78	6.58	8.00	8.28	7.90	6.58	6.80	6.62	8.10	8.40	8.40
+CollabLLMSci, CollabSciReM weights	—	—	—	—	—	—	—	—	—	—	—	—	—	—	—
+CollabSciReM, sensitivity	7.03	7.10	7.30	6.78	6.83	6.92	8.20	8.22	8.38	6.70	6.85	7.00	8.62	8.25	8.68
+CollabSciReM	7.38	7.08	7.00	7.12	6.67	6.72	8.15	8.20	8.22	6.95	7.10	6.78	8.50	8.60	8.45
+

@@ -1,0 +1,21 @@
+Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question(s) displayed below. Begin your evaluation by providing a short explanation. Be as objective as possible. After providing your explanation, you must rate the response on the following five dimensions, each on a scale of 1 to 10:
+
+- Accuracy: how factually correct and technically sound the response is (consider correctness of scientific/mathematical content, depth, and reasoning).
+- Format: how well-structured, clear, readable, and appropriately formatted the response is (consider organization, clarity, and adherence to a helpful answer style).
+- Usefulness: how helpful and actionable the response is for the user (consider completeness, practical value, and level of detail).
+- Relevance: how well the response addresses what was actually asked, staying on topic without unnecessary or off-topic content.
+- Overall: your holistic judgement of the overall quality of the response.
+
+You must report all five ratings by strictly following this format, each on its own line:
+Accuracy: [[A]]
+Format: [[F]]
+Usefulness: [[U]]
+Relevance: [[R]]
+Overall: [[O]]
+
+for example:
+Accuracy: [[7]]
+Format: [[8]]
+Usefulness: [[7]]
+Relevance: [[9]]
+Overall: [[7]]
